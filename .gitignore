@@ -1,6 +1,9 @@
 # Ignore node_modules directory
 node_modules/
 
+#Ignore workspace
+dcp-monte-carlo.code-workspace
+
 # Ignore any local build output or compiled files
 dist/
 build/
