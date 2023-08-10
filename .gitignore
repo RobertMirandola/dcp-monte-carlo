@@ -1,0 +1,51 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore any local build output or compiled files
+dist/
+build/
+out/
+
+# Ignore user-specific files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+
+# Ignore log files
+*.log
+
+# Ignore package lock files
+package-lock.json
+yarn.lock
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+*.~lock.*
+
+# Ignore Jest coverage directory
+/coverage
+
+# Ignore Jest snapshot directories
+/__snapshots__/
+
+# Ignore Cypress videos and screenshots
+/cypress/videos/
+/cypress/screenshots/
