@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="http://scheduler.dev.robert.office.distributive.network/dcp-client/dcp-client.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
   </head>
   <body>
     <h1>Monte Carlo Distributions with DCP</h1>
@@ -15,15 +18,14 @@
     </div>
     <form id="addDataSetForm">
       <button id="submitButton" type="submit">Add New Dataset</button>
+      <p id="numIterations"></p>
     </form>
     <div id="latexContainer">
-      <h1>
-        Algorithm used for Simulation: 
-      </h1>
+      <p>Formula for simulation: </p>
+      <div id="formula"></div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
-
         // Fetch job data
         const res = await fetch('../out.json');
         const resJSON = await res.json();
@@ -71,14 +73,15 @@
                 }]
             },
             options: {
+                aspectRatio: 1,
                 scales: {
                   x: {
-                    min: -2,
-                    max: 2
+                    min: -1.2,
+                    max: 1.2
                 },
                 y: {
-                    min: -2,
-                    max: 2
+                    min: -1.2,
+                    max: 1.2
                 }
                 },
                 plugins: {
@@ -89,6 +92,7 @@
 
         function addDataSet(label, data) 
         {
+          const numberOfIterations = `${label} iterations`;
           chart.data.datasets.push({ 
             label: `${label} iterations`,
             data: data.map(point => ({
@@ -100,9 +104,18 @@
               const value = data[index].pointInCircle;
               return value ? 'green' : 'red';
             },
-            pointRadius: 1,
+            pointRadius: 2,
            });
            chart.update();
+           document.getElementById('numIterations').textContent = `${numberOfIterations}`;
+           renderFormula(String.raw`$$x^2 + y^2 \leq r^2$$`);
+        }
+
+        function renderFormula(formulaString)
+        {
+          const formula = document.getElementById("formula");
+          formula.innerHTML = formulaString;
+          MathJax.typeset();
         }
 
         // Handle form submission

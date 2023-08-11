@@ -4,10 +4,10 @@ async function main()
 {
   const compute = require('dcp/compute');
   const fs = require('fs');
-
+  
   const file = 'out.json';
 
-    // Check if the file exists
+  // Check if the file exists
   fs.access(file, fs.constants.F_OK, (err) => {
     if (err) {
         console.error('File does not exist.');
@@ -16,8 +16,6 @@ async function main()
         fs.unlink(file, (unlinkErr) => {
             if (unlinkErr) {
                 console.error('Error deleting file:', unlinkErr);
-            } else {
-                console.log('File deleted successfully.');
             }
         });
     }
@@ -38,7 +36,7 @@ async function main()
       if (valToCompare < 1)
         pointInCircle = true;
 
-      coordinates.push({x: x, y: y, pointInCircle });
+      coordinates.push({ x: x, y: y, pointInCircle });
     }
     return coordinates;
   }
@@ -65,9 +63,7 @@ async function main()
   } else {
       console.log('JSON data written to file:', file);
   }
-  })
-
+  });
 }
-
 
 require('dcp-client').init().then(main);

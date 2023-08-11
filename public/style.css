@@ -1,3 +1,49 @@
 h1 {
   text-align: center;
 }
+
+#formula {
+  font-size: 24px;
+  margin-left: 1em;
+}
+
+#plotContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  width: 70vh,
+}
+
+#myCanvas {
+  border: 1px solid black;
+}
+
+#latexContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+#addDataSetForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+}
+
+#submitButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  /* margin-right: 23.3em; */
+}
+
+#numIterations {
+  margin-left: 1em;
+}
