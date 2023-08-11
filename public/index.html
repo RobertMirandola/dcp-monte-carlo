@@ -58,15 +58,13 @@
                 datasets: [{
                   label: "Unit Circle",
                   data: quarterCircleData,
-                  backgroundColor: "rgba(75, 192, 192, 0.2)",
-                  borderColor: "rgba(75, 192, 192, 1)",
+                  borderColor: 'blue',
                   pointRadius: 0.2
                 }, 
                 {
                   label: "Unit Square",
                   data: squareData,
-                  backgroundColor: "rgba(0, 128, 0)",
-                  borderColor: "rgba(0,128,1)",
+                  borderColor: 'purple',
                   pointRadius: 1,
                   borderWidth: 1,
                   showLine: true,
@@ -82,35 +80,31 @@
                     min: -2,
                     max: 2
                 }
+                },
+                plugins: {
+                  legend: { display: false }
                 }
             }
         });
-        const colours = generateColors(modelResults.length)
 
-        function addDataSet(label, data, backgroundColor) 
+        function addDataSet(label, data) 
         {
           chart.data.datasets.push({ 
             label: `${label} iterations`,
-            data: data,
-            backgroundColor: backgroundColor,
+            data: data.map(point => ({
+              x: point.x,
+              y: point.y,
+            })),
+            pointBackgroundColor: function(context) {
+              const index = context.dataIndex;
+              const value = data[index].pointInCircle;
+              return value ? 'green' : 'red';
+            },
             pointRadius: 1,
            });
            chart.update();
         }
 
-        function generateColors(count) 
-        {
-          const colors = [];
-
-          for (let i = 0; i < count; i++) {
-              const hue = (i * 37) % 360; // Vary the hue for contrast
-              const color = `hsla(${hue}, 70%, 30%, 1)`;
-              colors.push(color);
-          }
-
-          return colors;
-        }
-        
         // Handle form submission
         let currentIndex = 1;
         const form = document.getElementById("addDataSetForm");
@@ -120,7 +114,7 @@
           {
             const data = modelResults[currentIndex];
             const numIterations = modelResults[currentIndex].length;
-            addDataSet(numIterations, data, colours[currentIndex]);
+            addDataSet(numIterations, data);
           }
           currentIndex++;
           if (currentIndex === modelResults.length + 1)
