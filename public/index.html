@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCP Monte Carlo Simulation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="http://scheduler.dev.robert.office.distributive.network/dcp-client/dcp-client.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h1>Monte Carlo Distributions with DCP</h1>
+    <div id="plotContainer">
+      <canvas id="myCanvas"></canvas>
+    </div>
+    <form id="addDataSetForm">
+      <button id="submitButton" type="submit">Add New Dataset</button>
+    </form>
+    <div id="latexContainer">
+      <h1>
+        Algorithm used for Simulation: 
+      </h1>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+
+        // Fetch job data
+        const res = await fetch('../out.json');
+        const resJSON = await res.json();
+        const modelResults = [];
+        for (let i = 0; i < resJSON.length; i++ )
+        {
+          if (!(resJSON[i] instanceof Array))
+            modelResults[i] = window.dcp.kvin.deserialize(resJSON[i]);
+          else
+            modelResults[i] = resJSON[i];
+        }
+
+        const quarterCircleData = [];
+        for (let angle = 0; angle <= Math.PI*2; angle += 0.01) 
+        {
+            const x = Math.cos(angle);
+            const y = Math.sin(angle);
+            quarterCircleData.push({ x, y });
+        }
+        // Create and display the chart
+        const squareData = [{ x: -1, y: -1 },    
+                      { x: -1, y: 1 },    
+                      { x: 1, y: 1 }, 
+                      { x: 1, y: -1 }, 
+                      { x: -1, y: -1} ];
+        const ctx = document.getElementById("myCanvas").getContext("2d");
+        plotContainer.innerHTML = ""; // Clear previous chart
+        plotContainer.appendChild(ctx.canvas);
+        const chart = new Chart(ctx, {
+            type: "scatter",
+            data: {
+                datasets: [{
+                  label: "Unit Circle",
+                  data: quarterCircleData,
+                  backgroundColor: "rgba(75, 192, 192, 0.2)",
+                  borderColor: "rgba(75, 192, 192, 1)",
+                  pointRadius: 0.2
+                }, 
+                {
+                  label: "Unit Square",
+                  data: squareData,
+                  backgroundColor: "rgba(0, 128, 0)",
+                  borderColor: "rgba(0,128,1)",
+                  pointRadius: 1,
+                  borderWidth: 1,
+                  showLine: true,
+                }]
+            },
+            options: {
+                scales: {
+                  x: {
+                    min: -2,
+                    max: 2
+                },
+                y: {
+                    min: -2,
+                    max: 2
+                }
+                }
+            }
+        });
+        const colours = generateColors(modelResults.length)
+
+        function addDataSet(label, data, backgroundColor) 
+        {
+          chart.data.datasets.push({ 
+            label: `${label} iterations`,
+            data: data,
+            backgroundColor: backgroundColor,
+            pointRadius: 1,
+           });
+           chart.update();
+        }
+
+        function generateColors(count) 
+        {
+          const colors = [];
+
+          for (let i = 0; i < count; i++) {
+              const hue = (i * 37) % 360; // Vary the hue for contrast
+              const color = `hsla(${hue}, 70%, 30%, 1)`;
+              colors.push(color);
+          }
+
+          return colors;
+        }
+        
+        // Handle form submission
+        let currentIndex = 1;
+        const form = document.getElementById("addDataSetForm");
+        form.addEventListener("submit", (ev) => {
+          ev.preventDefault();
+          if (currentIndex < modelResults.length)
+          {
+            const data = modelResults[currentIndex];
+            const numIterations = modelResults[currentIndex].length;
+            addDataSet(numIterations, data, colours[currentIndex]);
+          }
+          currentIndex++;
+          if (currentIndex === modelResults.length + 1)
+          {
+            const button = document.getElementById("submitButton");
+            button.style.opacity = 0.5;
+            button.style.pointerEvents = null;
+          }
+        })
+      });
+
+    </script>
+  </body>
+</html>
