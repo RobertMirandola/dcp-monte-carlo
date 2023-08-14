@@ -24,7 +24,9 @@
       <p>Formula for simulation: </p>
       <div id="formula"></div>
     </div>
-    <script>
+    <script type="module">
+      import { createChart } from './chart-module.js';
+      import { setupForm } from './form-module.js';
       document.addEventListener("DOMContentLoaded", async () => {
         // Fetch job data
         const res = await fetch('../out.json');
@@ -38,12 +40,12 @@
             modelResults[i] = resJSON[i];
         }
 
-        const quarterCircleData = [];
+        const unitCircleData = [];
         for (let angle = 0; angle <= Math.PI*2; angle += 0.01) 
         {
             const x = Math.cos(angle);
             const y = Math.sin(angle);
-            quarterCircleData.push({ x, y });
+            unitCircleData.push({ x, y });
         }
         // Create and display the chart
         const squareData = [{ x: -1, y: -1 },    
@@ -54,91 +56,9 @@
         const ctx = document.getElementById("myCanvas").getContext("2d");
         plotContainer.innerHTML = ""; // Clear previous chart
         plotContainer.appendChild(ctx.canvas);
-        const chart = new Chart(ctx, {
-            type: "scatter",
-            data: {
-                datasets: [{
-                  label: "Unit Circle",
-                  data: quarterCircleData,
-                  borderColor: 'blue',
-                  pointRadius: 0.2
-                }, 
-                {
-                  label: "Unit Square",
-                  data: squareData,
-                  borderColor: 'purple',
-                  pointRadius: 1,
-                  borderWidth: 1,
-                  showLine: true,
-                }]
-            },
-            options: {
-                aspectRatio: 1,
-                scales: {
-                  x: {
-                    min: -1.2,
-                    max: 1.2
-                },
-                y: {
-                    min: -1.2,
-                    max: 1.2
-                }
-                },
-                plugins: {
-                  legend: { display: false }
-                }
-            }
-        });
-
-        function addDataSet(label, data) 
-        {
-          const numberOfIterations = `${label} iterations`;
-          chart.data.datasets.push({ 
-            label: `${label} iterations`,
-            data: data.map(point => ({
-              x: point.x,
-              y: point.y,
-            })),
-            pointBackgroundColor: function(context) {
-              const index = context.dataIndex;
-              const value = data[index].pointInCircle;
-              return value ? 'green' : 'red';
-            },
-            pointRadius: 2,
-           });
-           chart.update();
-           document.getElementById('numIterations').textContent = `${numberOfIterations}`;
-           renderFormula(String.raw`$$x^2 + y^2 \leq r^2$$`);
-        }
-
-        function renderFormula(formulaString)
-        {
-          const formula = document.getElementById("formula");
-          formula.innerHTML = formulaString;
-          MathJax.typeset();
-        }
-
-        // Handle form submission
-        let currentIndex = 1;
-        const form = document.getElementById("addDataSetForm");
-        form.addEventListener("submit", (ev) => {
-          ev.preventDefault();
-          if (currentIndex < modelResults.length)
-          {
-            const data = modelResults[currentIndex];
-            const numIterations = modelResults[currentIndex].length;
-            addDataSet(numIterations, data);
-          }
-          currentIndex++;
-          if (currentIndex === modelResults.length + 1)
-          {
-            const button = document.getElementById("submitButton");
-            button.style.opacity = 0.5;
-            button.style.pointerEvents = null;
-          }
-        })
+        const chart = createChart(unitCircleData, squareData)
+        setupForm(modelResults, chart);
       });
-
     </script>
   </body>
 </html>

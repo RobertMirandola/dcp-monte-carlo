@@ -32,7 +32,7 @@ async function main()
       const y = Math.random() * 2 - 1;
       const valToCompare = x*x + y*y;
 
-      /* Check if point is in the quarter circle */
+      /* Check if point is in the unit circle */
       if (valToCompare < 1)
         pointInCircle = true;
 
