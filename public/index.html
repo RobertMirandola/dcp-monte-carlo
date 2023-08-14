@@ -25,34 +25,17 @@
       <div id="formula"></div>
     </div>
     <script type="module">
-      import { createChart } from './chart-module.js';
-      import { setupForm } from './form-module.js';
+      import { createChart } from './chart.js';
+      import { setupForm } from './form.js';
+      import { fetchData } from './data.js';
+      import { createSimpleShapeData } from './utils.js';
       document.addEventListener("DOMContentLoaded", async () => {
         // Fetch job data
-        const res = await fetch('../out.json');
-        const resJSON = await res.json();
-        const modelResults = [];
-        for (let i = 0; i < resJSON.length; i++ )
-        {
-          if (!(resJSON[i] instanceof Array))
-            modelResults[i] = window.dcp.kvin.deserialize(resJSON[i]);
-          else
-            modelResults[i] = resJSON[i];
-        }
+        const filePath = '../out.json';
+        const modelResults = await fetchData(filePath);
 
-        const unitCircleData = [];
-        for (let angle = 0; angle <= Math.PI*2; angle += 0.01) 
-        {
-            const x = Math.cos(angle);
-            const y = Math.sin(angle);
-            unitCircleData.push({ x, y });
-        }
-        // Create and display the chart
-        const squareData = [{ x: -1, y: -1 },    
-                      { x: -1, y: 1 },    
-                      { x: 1, y: 1 }, 
-                      { x: 1, y: -1 }, 
-                      { x: -1, y: -1} ];
+        const { unitCircleData, squareData } = createSimpleShapeData();
+
         const ctx = document.getElementById("myCanvas").getContext("2d");
         plotContainer.innerHTML = ""; // Clear previous chart
         plotContainer.appendChild(ctx.canvas);

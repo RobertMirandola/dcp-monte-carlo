@@ -1,4 +1,5 @@
-import { updateChart } from './chart-module.js';
+import { updateChart } from './chart.js';
+import { renderFormula } from './utils.js';
 
 export function setupForm(modelResults, chart) {
   let currentIndex = 1;
@@ -20,11 +21,4 @@ export function setupForm(modelResults, chart) {
       }
       renderFormula(String.raw`$$x^2 + y^2 \leq r^2$$`);
   });
-}
-
-function renderFormula(formulaString)
-{
-  const formula = document.getElementById("formula");
-  formula.innerHTML = formulaString;
-  MathJax.typeset();
 }
