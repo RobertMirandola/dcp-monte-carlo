@@ -13,34 +13,105 @@
   </head>
   <body>
     <h1>Monte Carlo Distributions with DCP</h1>
-    <div id="plotContainer">
-      <canvas id="myCanvas"></canvas>
+    <div id="changeContainer">
+      <div id="plotContainer">
+        <canvas id="circleCanvas"></canvas>
+        <canvas id="eulerCanvas"></canvas>
+      </div>
+      <select id="canvasSelect">
+        <option value="circleCanvas">Pi Estimation</option>
+        <option value="eulerCanvas">Euler Estimation</option>
+      </select>
+      <form id="jobForm">
+        <label for="numberInput">Enter the number of slices:</label>
+        <input type="number" id="numberInput" name="numberInput">
+        <button type="submit">Deploy Job</button>
+      </form>
+      <p id="jobStatus"></p>
+      <p id="slicesCompleted"></p>
     </div>
-    <form id="addDataSetForm">
-      <button id="submitButton" type="submit">Add New Dataset</button>
+    <form id="addCircleDataSetForm">
+      <button id="circleSubmitButton" type="submit">Add New Circle Dataset</button>
+      <p id="numIterations"></p>
+    </form>
+    <form id="addEulerDataSetForm">
+      <button id="eulerSubmitButton" type="submit">Add New Euler Dataset</button>
       <p id="numIterations"></p>
     </form>
     <div id="latexContainer">
-      <p>Formula for simulation: </p>
       <div id="formula"></div>
     </div>
+    <div id="estimateContainer">
+      <div id="estimate"></div>
+    </div>
     <script type="module">
-      import { createChart } from './chart.js';
+      import { createUnitCircleChart, createEulerChart, clearChart } from './chart.js';
       import { setupForm } from './form.js';
       import { fetchData } from './data.js';
-      import { createSimpleShapeData } from './utils.js';
+      import { deployPiJob } from './pi-job.js';
+      import { deployEulerJob } from './euler-job.js';
+      import { createSimpleShapeData, enableButton } from './utils.js';
       document.addEventListener("DOMContentLoaded", async () => {
+        const circleForm = document.getElementById("addCircleDataSetForm");
+        const eulerForm = document.getElementById("addEulerDataSetForm");
         // Fetch job data
-        const filePath = '../out.json';
-        const modelResults = await fetchData(filePath);
+        const circleExampleFilePath = '../circle-example.json';
+        const sineWavePath = '../sine-wave.json';
+        const integralPath = '../integral.json';
+        const eulerPath = '../euler.json';
+        const circleModelResults = await fetchData(circleExampleFilePath);
+        const eulerResults = await fetchData(eulerPath);
 
         const { unitCircleData, squareData } = createSimpleShapeData();
 
-        const ctx = document.getElementById("myCanvas").getContext("2d");
-        plotContainer.innerHTML = ""; // Clear previous chart
-        plotContainer.appendChild(ctx.canvas);
-        const chart = createChart(unitCircleData, squareData)
-        setupForm(modelResults, chart);
+        const canvasSelect = document.getElementById('canvasSelect');
+        const canvases = document.querySelectorAll('canvas');
+
+        canvasSelect.addEventListener('change', function() {
+          const selectedCanvasId = canvasSelect.value;
+          canvases.forEach(canvas => {
+            canvas.style.display = 'none';
+          });
+          const ctx = document.getElementById(`${selectedCanvasId}`).getContext("2d");
+          // plotContainer.innerHTML = ""; // Clear previous chart
+          plotContainer.appendChild(ctx.canvas);
+          document.getElementById(selectedCanvasId).style.display = 'flex';
+
+          if (selectedCanvasId === 'circleCanvas')
+          {
+            eulerForm.style.display = 'none';
+            circleForm.style.display = 'flex';
+            clearChart(unitCircleChart);
+            enableButton(document.getElementById("circleSubmitButton"));
+            setupForm(circleForm, circleModelResults, unitCircleChart);
+          }
+          else
+          {
+            eulerForm.style.display = 'flex';
+            circleForm.style.display = 'none';
+            clearChart(eulerChart);
+            enableButton(document.getElementById("eulerSubmitButton"));
+            setupForm(eulerForm, eulerResults, eulerChart);
+          }
+        });
+
+        const unitCircleChart = createUnitCircleChart(unitCircleData, squareData);
+        const eulerChart = createEulerChart(eulerResults);
+
+        document.getElementById("eulerCanvas").style.display = 'none';
+        eulerForm.style.display = 'none';
+
+        const form = document.getElementById("addCircleDataSetForm");
+        setupForm(form, circleModelResults, unitCircleChart);
+
+        const jobForm = document.getElementById("jobForm");
+        jobForm.addEventListener('submit', async (ev) => {
+          if (canvasSelect.value === 'circleCanvas')
+            await deployPiJob(ev, unitCircleChart)
+          else
+            await deployEulerJob(ev, eulerChart);
+        })
+
       });
     </script>
   </body>

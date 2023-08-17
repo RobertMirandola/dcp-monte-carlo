@@ -1,7 +1,7 @@
 export function renderFormula(formulaString)
 {
   const formula = document.getElementById("formula");
-  formula.innerHTML = formulaString;
+  formula.textContent = `Formula for simulation: ${formulaString}`;
   MathJax.typeset();
 }
 
@@ -21,4 +21,16 @@ export function createSimpleShapeData()
     { x: -1, y: -1} ];
 
   return { unitCircleData, squareData };
+}
+
+export function disableButton(button)
+{
+  button.style.opacity = 0.5;
+  button.style.pointerEvents = "none";
+}
+
+export function enableButton(button)
+{
+  button.style.opacity = 1;
+  button.style.pointerEvents = 'auto';
 }

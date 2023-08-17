@@ -2,8 +2,8 @@ h1 {
   text-align: center;
 }
 
-#formula {
-  font-size: 24px;
+#formula, #estimate {
+  font-size: 20px;
   margin-left: 1em;
 }
 
@@ -15,25 +15,30 @@ h1 {
   width: 70vh,
 }
 
-#myCanvas {
-  border: 1px solid black;
+#changeContainer {
+
 }
 
-#latexContainer {
+#circleCanvas, #eulerCanvas {
+  border: 1px solid black;
+  margin-right: 1em;
+}
+
+#latexContainer, #estimateContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
 }
 
-#addDataSetForm {
+#addCircleDataSetForm, #addEulerDataSetForm {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 2em;
 }
 
-#submitButton {
+#circleSubmitButton, #eulerSubmitButton {
   padding: 10px 20px;
   font-size: 16px;
   background-color: #007bff;
