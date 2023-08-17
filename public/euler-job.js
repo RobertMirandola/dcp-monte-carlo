@@ -1,8 +1,6 @@
 export async function deployEulerJob(ev, chart)
 {
   ev.preventDefault();
-  document.getElementById("circleSubmitButton").style.display = 'none';
-  document.getElementById("eulerSubmitButton").style.display = 'none';
   const numberInput = parseInt(document.getElementById('numberInput').value);
 
   const inputSet = eulerInputSet(numberInput);
@@ -14,13 +12,14 @@ export async function deployEulerJob(ev, chart)
 
   const job = compute.for(inputSet, eulerWorkFunction);
   job.on('readystatechange', (ev) => {
-    console.log(ev);
+    document.getElementById('jobStatus').textContent = `Job state: ${ev}`;
   });
 
   job.setPaymentAccountKeystore(keystore);
 
   let pointsUnderCurve = 0;
   let totalPoints = 0;
+  let resultCount = 0;
   job.on('result', async (ev) => {
     let resultSent = ev.result;
     if (!(resultSent instanceof Array))
@@ -29,7 +28,8 @@ export async function deployEulerJob(ev, chart)
     pointsUnderCurve += resultSent.filter((point) => { return point.pointUnderCurve === true }).length;
     totalPoints += resultSent.length;
     updateEulerChart(numberInput, chart, resultSent, pointsUnderCurve, totalPoints);
-    console.log(resultSent)
+    resultCount++;
+    document.getElementById('slicesCompleted').textContent = `Number of slices completed: ${resultCount}`;
   })
 
   await job.exec();
@@ -84,6 +84,6 @@ async function updateEulerChart(label, chart, data, pointsUnderCurve, totalPoint
 
     const maxRange = data[0].maxRange;
     const eulerEstimate = ((pointsUnderCurve / totalPoints) * (maxRange * Math.exp(1)) + 1);
-    document.getElementById('estimate').textContent = `Euler number estimate: ${eulerEstimate.toFixed(4)}`;
+    document.getElementById('eulerEstimate').innerHTML = `<b>Current euler number estimate: ${eulerEstimate.toFixed(4)}</b>`;
     chart.update();
 }

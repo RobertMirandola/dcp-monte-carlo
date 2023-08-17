@@ -1,8 +1,6 @@
 export async function deployPiJob(ev, chart)
 {
   ev.preventDefault();
-  document.getElementById("circleSubmitButton").style.display = 'none';
-  document.getElementById("eulerSubmitButton").style.display = 'none';
   const numberInput = parseInt(document.getElementById('numberInput').value);
 
   const inputSet = circleInputSet(numberInput);
@@ -86,6 +84,6 @@ async function updateCircleChart(label, chart, data, pointsInCircle, totalPoints
     console.log('pointsInCircle', pointsInCircle)
     console.log('totalPoints', totalPoints)
     const piEstimate = (pointsInCircle / totalPoints) * 4;
-    document.getElementById('estimate').textContent = `PI Estimate: ${piEstimate.toFixed(4)}`;
+    document.getElementById('circleEstimate').innerHTML = `<b>Current π Estimation = ${piEstimate.toFixed(4)}</b>`;
     chart.update();
 }

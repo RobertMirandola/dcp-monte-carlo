@@ -1,54 +1,140 @@
+html, body {
+  font-family: Arial, sans-serif;
+}
+
+
 h1 {
   text-align: center;
 }
 
-#formula, #estimate {
-  font-size: 20px;
-  margin-left: 1em;
+#topContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+#canvasSelect {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #3498db;
+  border-radius: 6px;
+  background-color: #ecf0f1;
+  color: #3498db;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+#canvasSelect:hover {
+  background-color: #3498db;
+  color: #ecf0f1;
+  border-color: #2980b9;
+}
+
+#canvasSelect:focus {
+  outline: none;
+  border-color: #2980b9;
+}
+
+
+#mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  margin: 0;
+  padding: 0;
+}
+
+#jobContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 84%;
+  width: 40%;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2em;
+}
+
+#jobForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+#jobForm label,
+#jobForm input,
+#jobForm button,
+#jobStatus,
+#circleEstimate,
+#slicesCompleted {
+  margin: 5px 0; /* Add spacing between elements vertically */
+  font-size: 28px; /* Increase font size */
+}
+
+#jobForm input[type="number"],
+#jobForm button {
+  padding: 8px;
+  /* border: none; */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#jobForm input[type="number"] {
+  width: 120px; /* Adjust width as needed */
+}
+
+
+#canvasSelect,
+#jobStatus,
+#slicesCompleted {
+  margin: 0;
+}
+
 
 #plotContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
-  width: 70vh,
-}
-
-#changeContainer {
-
+  height: 80vh;
+  width: 50vh,
 }
 
 #circleCanvas, #eulerCanvas {
   border: 1px solid black;
+  margin-bottom: 2em;
   margin-right: 1em;
 }
 
-#latexContainer, #estimateContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+#eulerCanvas {
+  height: 772px !important;
 }
 
-#addCircleDataSetForm, #addEulerDataSetForm {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#circleEstimate {
   margin-top: 2em;
+  font-size: 36px;
 }
 
-#circleSubmitButton, #eulerSubmitButton {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  /* margin-right: 23.3em; */
+#eulerEstimate {
+  margin-top: 0em;
+  font-size: 30px;
 }
 
-#numIterations {
-  margin-left: 1em;
+#circleMathContainer {
+  font-size: 28px; /* Adjust font size */
+  line-height: 3; /* Adjust line spacing */
+}
+
+#eulerMathContainer {
+  font-size: 24px;
+  line-height: 2;
+}
+
+#mathTitle {
+  margin-top: 2em;
+  font-size: 28px;
 }

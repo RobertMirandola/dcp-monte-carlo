@@ -9,7 +9,7 @@ export function createUnitCircleChart(unitCircleData, squareData)
         label: "Unit Circle",
         data: unitCircleData,
         borderColor: 'blue',
-        pointRadius: 0.2
+        pointRadius: 0.2,
       }, 
       {
         label: "Unit Square",
@@ -24,16 +24,28 @@ export function createUnitCircleChart(unitCircleData, squareData)
       aspectRatio: 1,
       scales: {
           x: {
+            title: {
+              display: true,
+              text: 'X Values'
+            },
             min: -1.2,
             max: 1.2
           },
           y: {
+            title: {
+              display: true,
+              text: 'Y Values'
+            },
             min: -1.2,
             max: 1.2
           }
       },
       plugins: {
-          legend: { display: false }
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Unit Circle'
+          }
       }
     }
   });
@@ -62,9 +74,8 @@ export function updateCircleChart(chart, label, data)
   chart.update();
 }
 
-export function createEulerChart(eulerResults)
+export function createEulerChart()
 {
-  const maxRange = eulerResults[0][0].maxRange;
   const ctx = document.getElementById("eulerCanvas").getContext("2d");
   const chart =   new Chart(ctx, {
     type: "line",
@@ -73,8 +84,8 @@ export function createEulerChart(eulerResults)
         {
           label: "f(x) = e^x",
           data: Array.from({ length: 100 }, (_, i) => ({
-            x: (i / 100) * maxRange,
-            y: Math.exp((i / 100) * maxRange),
+            x: (i / 100) * 1,
+            y: Math.exp((i / 100) * 1),
           })),
           borderColor: "blue",
           pointRadius: 1,
@@ -85,15 +96,27 @@ export function createEulerChart(eulerResults)
     options: {
       scales: {
         x: {
+          title: {
+            display: true,
+            text: 'X Values'
+          },
           type: "linear",
           position: "bottom",
         },
         y: {
+          title: {
+            display: true,
+            text: 'f(x) = eˣ'
+          },
           beginAtZero: true,
         },
       },
       plugins: {
-        legend: { display: false }
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Natural Exponential Function'
+        }
       },
       responsive: true,
       maintainAspectRatio: false,
@@ -134,7 +157,7 @@ export function clearChart(chart)
   {
     chart.data.datasets.splice(2, length - 2);
   }
-  else if (chart.data.datasets.length > 1)
+  else if (chart.data.datasets[0].label === 'f(x) = e^x' && chart.data.datasets.length > 1)
     chart.data.datasets.splice(1, length - 1);
 
   chart.update();
