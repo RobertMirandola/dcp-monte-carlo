@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <script src="http://scheduler.dev.robert.office.distributive.network/dcp-client/dcp-client.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"> -->
     <script type="text/javascript" async
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
@@ -19,7 +17,7 @@
     <div id="topContainer">
       <select id="canvasSelect">
         <option value="circleCanvas">Pi Estimation</option>
-        <option value="eulerCanvas">Euler Estimation</option>
+        <option value="eulerCanvas">Euler Number Estimation</option>
       </select>
     </div>
     <div id="mainContainer">
@@ -30,7 +28,7 @@
       <div id="jobContainer">
         <form id="jobForm">
           <label for="numberInput">Enter the number of slices:</label>
-          <input type="number" id="numberInput" name="numberInput" value="3">
+          <input type="number" id="numberInput" name="numberInput" value="30">
           <button type="submit">Deploy Job</button>
         </form>
         <p id="jobStatus"></p>
@@ -46,9 +44,10 @@
       import { createUnitCircleChart, createEulerChart, clearChart } from './chart.js';
       import { deployPiJob } from './pi-job.js';
       import { deployEulerJob } from './euler-job.js';
-      import { createSimpleShapeData, renderCircleMath, renderEulerMath} from './utils.js';
+      import { createSimpleShapeData, createRectangleData, renderCircleMath, renderEulerMath} from './utils.js';
       document.addEventListener("DOMContentLoaded", async () => {
         const { unitCircleData, squareData } = createSimpleShapeData();
+        const rectangleData = createRectangleData();
 
         const canvasSelect = document.getElementById('canvasSelect');
         const canvases = document.querySelectorAll('canvas');
@@ -75,7 +74,7 @@
         });
 
         const unitCircleChart = createUnitCircleChart(unitCircleData, squareData);
-        const eulerChart = createEulerChart();
+        const eulerChart = createEulerChart(rectangleData);
 
         document.getElementById("eulerCanvas").style.display = 'none';
 

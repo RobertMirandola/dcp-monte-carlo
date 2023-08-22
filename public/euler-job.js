@@ -20,14 +20,20 @@ export async function deployEulerJob(ev, chart)
   let pointsUnderCurve = 0;
   let totalPoints = 0;
   let resultCount = 0;
+  let maxHeight = 0;
   job.on('result', async (ev) => {
     let resultSent = ev.result;
     if (!(resultSent instanceof Array))
       resultSent = window.dcp.kvin.deserialize(resultSent);
 
+    resultSent.forEach((element) => { 
+      if (element.maxHeight > maxHeight)
+        maxHeight = element.maxHeight;
+    }) 
+
     pointsUnderCurve += resultSent.filter((point) => { return point.pointUnderCurve === true }).length;
     totalPoints += resultSent.length;
-    updateEulerChart(numberInput, chart, resultSent, pointsUnderCurve, totalPoints);
+    updateEulerChart(numberInput, chart, resultSent, pointsUnderCurve, totalPoints, maxHeight);
     resultCount++;
     document.getElementById('slicesCompleted').textContent = `Number of slices completed: ${resultCount}`;
   })
@@ -43,15 +49,18 @@ function eulerWorkFunction(numPoints)
   const maxRange = 1;
   progress();
   const data = [];
+  let maxHeight = 0;
 
   for (let i = 0; i < numPoints; i++) {
     const x = Math.random() * maxRange;
-    const y = Math.random() * Math.exp(maxRange);
+    const y = Math.random() * Math.exp(1);
+    if (y > maxHeight)
+      maxHeight = y;
 
     // Check if the point is under the curve
     const pointUnderCurve = y <= Math.exp(x);
 
-    data.push({ x, y, pointUnderCurve, maxRange });
+    data.push({ x, y, pointUnderCurve, maxRange, maxHeight });
   }
   return data;
 }
@@ -60,12 +69,12 @@ function eulerInputSet(iterationNum)
 {
   let inputSet = [];
   for (let i = 0; i < iterationNum; i++)
-    inputSet.push(500); // Do like 60 slices
+    inputSet.push(1000); // Do like 60 slices
 
   return inputSet;
 }
 
-async function updateEulerChart(label, chart, data, pointsUnderCurve, totalPoints)
+async function updateEulerChart(label, chart, data, pointsUnderCurve, totalPoints, maxHeight)
 {
   chart.data.datasets.push({ 
     label: `${label} iterations`,
@@ -82,8 +91,11 @@ async function updateEulerChart(label, chart, data, pointsUnderCurve, totalPoint
         pointRadius: 2,
     });
 
-    const maxRange = data[0].maxRange;
-    const eulerEstimate = ((pointsUnderCurve / totalPoints) * (maxRange * Math.exp(1)) + 1);
-    document.getElementById('eulerEstimate').innerHTML = `<b>Current euler number estimate: ${eulerEstimate.toFixed(4)}</b>`;
+    console.log('got here')
+    console.log(maxHeight + 'helloooo')
+    console.log(pointsUnderCurve)
+    console.log(totalPoints)
+    const eulerEstimate = ((pointsUnderCurve / totalPoints) * maxHeight  + 1);
+    document.getElementById('eulerEstimate').innerHTML = `<b>Current e estimate ≈ ${eulerEstimate.toFixed(4)}</b>`;
     chart.update();
 }

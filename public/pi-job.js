@@ -84,6 +84,6 @@ async function updateCircleChart(label, chart, data, pointsInCircle, totalPoints
     console.log('pointsInCircle', pointsInCircle)
     console.log('totalPoints', totalPoints)
     const piEstimate = (pointsInCircle / totalPoints) * 4;
-    document.getElementById('circleEstimate').innerHTML = `<b>Current π Estimation = ${piEstimate.toFixed(4)}</b>`;
+    document.getElementById('circleEstimate').innerHTML = `<b>Current π Estimation ≈ ${piEstimate.toFixed(4)}</b>`;
     chart.update();
 }

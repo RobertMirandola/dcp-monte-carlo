@@ -9,6 +9,7 @@ export function createUnitCircleChart(unitCircleData, squareData)
         label: "Unit Circle",
         data: unitCircleData,
         borderColor: 'blue',
+        showLine: true,
         pointRadius: 0.2,
       }, 
       {
@@ -74,7 +75,7 @@ export function updateCircleChart(chart, label, data)
   chart.update();
 }
 
-export function createEulerChart()
+export function createEulerChart(rectangleData)
 {
   const ctx = document.getElementById("eulerCanvas").getContext("2d");
   const chart =   new Chart(ctx, {
@@ -82,8 +83,16 @@ export function createEulerChart()
     data: {
       datasets: [
         {
+          label: "Rectangle",
+          data: rectangleData,
+          borderColor: 'purple',
+          pointRadius: 1,
+          borderWidth: 1,
+          showLine: true,
+        },
+        {
           label: "f(x) = e^x",
-          data: Array.from({ length: 100 }, (_, i) => ({
+          data: Array.from({ length: 101 }, (_, i) => ({
             x: (i / 100) * 1,
             y: Math.exp((i / 100) * 1),
           })),
@@ -143,9 +152,8 @@ export function updateEulerChart(chart, label, data)
         pointRadius: 2,
     });
     const maxRange = data[0].maxRange;
-    // const maxFuncValue = Math.exp(maxRange);
     const pointsUnderCurve = data.filter((point) => point.pointUnderCurve === true);
-    const eulerEstimate = ((pointsUnderCurve.length / data.length) * (maxRange * Math.exp(1)) + 1);
+    const eulerEstimate = ((pointsUnderCurve.length / data.length) * (maxRange * Math.exp(maxRagne)) + maxRange);
     document.getElementById('estimate').textContent = `Euler estimate: ${eulerEstimate}`;
     chart.update();
 }
@@ -153,13 +161,8 @@ export function updateEulerChart(chart, label, data)
 export function clearChart(chart)
 {
   const length = chart.data.datasets.length;
-  if (chart.data.datasets[0].label === 'Unit Circle' && chart.data.datasets.length > 2)
-  {
+  if (chart.data.datasets.length > 2)
     chart.data.datasets.splice(2, length - 2);
-  }
-  else if (chart.data.datasets[0].label === 'f(x) = e^x' && chart.data.datasets.length > 1)
-    chart.data.datasets.splice(1, length - 1);
-
   chart.update();
 }
    
